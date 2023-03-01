@@ -1,3 +1,4 @@
+import { HiArrowDown } from "react-icons/hi";
 import { Progress } from "./Progress";
 import { Time } from "./Time";
 
@@ -14,7 +15,9 @@ export const Clock = ({ year, yearMatch, timeAsYear }: ClockProps) => {
         <Time yearMatch={yearMatch} />
         <Progress />
       </div>
-      <p className="text-white text-2xl">↓</p>
+      <p className="text-white text-2xl">
+        <HiArrowDown />
+      </p>
       <p className="text-white text-2xl sm:text-3xl">
         {year ? <span>{year} </span> : <span>???? </span>}
         <span className="text-zinc-100 font-medium text-xl sm:text-2xl">
