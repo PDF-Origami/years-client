@@ -3,12 +3,12 @@ import { useEffect, useRef, useState } from "react";
 const drawProgress = (ctx: CanvasRenderingContext2D) => {
   ctx.clearRect(0, 0, 20, 20);
   ctx.lineWidth = 3;
-  ctx.strokeStyle = "#374151";
+  ctx.strokeStyle = "#3f3f46"; // zinc-700
   ctx.beginPath();
   ctx.arc(10, 10, 8, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = "#2563eb";
+  ctx.strokeStyle = "#3b82f6"; // blue-500
   ctx.beginPath();
   const date = new Date();
   const ms = date.getSeconds() * 1000 + date.getMilliseconds();
