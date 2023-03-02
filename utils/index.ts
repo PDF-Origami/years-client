@@ -1,3 +1,5 @@
+import { lightFormat } from "date-fns";
+
 export const shuffleArray = <T>(original: T[]): T[] => {
   const arr = original.slice();
   for (let i = arr.length - 1; i > 1; i--) {
@@ -18,3 +20,5 @@ export const splitEventText = (text: string) => {
   const description = text.substring(date.length);
   return [date, description];
 };
+
+export const timeAsYear = (time: Date) => lightFormat(time, "HHmm");

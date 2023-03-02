@@ -1,18 +1,11 @@
 import { lightFormat } from "date-fns";
-import { useEffect, useState } from "react";
 
 type TimeProps = {
+  time: Date;
   yearMatch?: string;
 };
 
-export function Time({ yearMatch }: TimeProps) {
-  const [time, setTime] = useState(Date.now());
-
-  useEffect(() => {
-    let timer = setInterval(() => setTime(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
+export function Time({ time, yearMatch }: TimeProps) {
   return (
     <div className="flex items-center">
       <span

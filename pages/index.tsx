@@ -1,21 +1,18 @@
 import Head from "next/head";
 import useSWRImmutable from "swr/immutable";
 import { preload } from "swr";
-import { lightFormat } from "date-fns";
+import { addMinutes } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 
 import { Event } from "@/components/Event";
 import { Clock } from "@/components/Clock";
 import { Controls } from "@/components/Controls";
-import { shuffleArray } from "@/utils";
+import { shuffleArray, timeAsYear } from "@/utils";
 
 const fetcher = (url: string) =>
   fetch(url)
     .then((r) => r.json())
     .then((data) => ({ ...data, events: shuffleArray(data.events) }));
-
-const getTimeAsYear = (next?: boolean) =>
-  lightFormat(new Date(Date.now() + (next ? 60000 : 0)), "HHmm");
 
 const getRandomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max + 1 - min)) + min;
@@ -27,11 +24,11 @@ const prefetchTime = getRandomInt(45, 55);
 
 export default function Home() {
   // State
-  const [timeAsYear, setTimeAsYear] = useState<string>(getTimeAsYear());
+  const [time, setTime] = useState<Date>(new Date());
   const [prefetchedNext, setPrefetchedNext] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const { data, error, isLoading } = useSWRImmutable(
-    `${process.env.NEXT_PUBLIC_API_URL}/events?year=${timeAsYear}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/events?year=${timeAsYear(time)}`,
     fetcher
   );
 
@@ -60,13 +57,12 @@ export default function Home() {
 
   useEffect(() => {
     let timer = setInterval(() => {
-      setTimeAsYear(getTimeAsYear());
+      setTime(new Date());
       if (new Date().getSeconds() > prefetchTime && !prefetchedNext) {
         // Prefetch
+        const nextMinuteAsYear = timeAsYear(addMinutes(time, 1));
         preload(
-          `${process.env.NEXT_PUBLIC_API_URL}/events?year=${getTimeAsYear(
-            true
-          )}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/events?year=${nextMinuteAsYear}`,
           fetcher
         );
         setPrefetchedNext(true);
@@ -85,11 +81,7 @@ export default function Home() {
       </Head>
       <main className="flex justify-center h-screen items-center">
         <div className="px-8 max-w-xl w-full flex flex-col items-center gap-8 sm:gap-8">
-          <Clock
-            year={data?.year}
-            yearMatch={data?.yearMatch}
-            timeAsYear={timeAsYear}
-          />
+          <Clock year={data?.year} yearMatch={data?.yearMatch} time={time} />
           <Event event={data?.events[eventIndex]} year={data?.year} />
           <Controls
             showNextEvent={showNextEvent}
