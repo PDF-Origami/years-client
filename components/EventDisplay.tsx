@@ -16,8 +16,7 @@ type EventTextPart = {
 };
 
 type EventDisplayProps = {
-  event?: Event;
-  year?: number;
+  event: Event;
 };
 
 // Assemble link positions & hrefs into objects that can be directly rendered as <a> or <span>,
@@ -55,15 +54,7 @@ const getParts = ({ text, links }: Event): EventTextPart[] => {
   return parts;
 };
 
-const divClasses = `text-white sm:leading-7 sm:text-lg h-72
-    overflow-y-auto bg-zinc-800 rounded-xl px-5 p-4 w-full 
-    scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-lg`;
-
-export const EventDisplay = ({ event, year }: EventDisplayProps) => {
-  if (!event || !year) {
-    return <div className={divClasses} />;
-  }
-
+export const EventDisplay = ({ event }: EventDisplayProps) => {
   const [date, description] = splitEventText(event.text);
   const textParts = useMemo(
     () =>
@@ -82,27 +73,25 @@ export const EventDisplay = ({ event, year }: EventDisplayProps) => {
   );
 
   return (
-    <div className="flex flex-col items-center w-full gap-3">
-      <div className={divClasses}>
-        <span className="text-zinc-400">{date}</span>
-        {textParts.map((part) =>
-          part.article ? (
-            <a
-              key={part.id}
-              href={`https://en.wikipedia.org/wiki/${part.article}`}
-              target="_blank"
-              className="text-blue-300 hover:underline"
-            >
-              {part.text}
-            </a>
-          ) : (
-            <span key={part.id} className="text-white">
-              {part.text}
-            </span>
-          )
-        )}
-        {/* <span>{description}</span> */}
-      </div>
-    </div>
+    <>
+      <span className="text-zinc-400">{date}</span>
+      {textParts.map((part) =>
+        part.article ? (
+          <a
+            key={part.id}
+            href={`https://en.wikipedia.org/wiki/${part.article}`}
+            target="_blank"
+            className="text-blue-400"
+          >
+            {part.text}
+          </a>
+        ) : (
+          <span key={part.id} className="text-white">
+            {part.text}
+          </span>
+        )
+      )}
+      {/* <span>{description}</span> */}
+    </>
   );
 };

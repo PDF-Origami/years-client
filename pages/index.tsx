@@ -4,15 +4,24 @@ import { preload } from "swr";
 import { addMinutes } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 
-import { EventDisplay } from "@/components/Event";
+import { EventDisplay } from "@/components/EventDisplay";
 import { Clock } from "@/components/Clock";
 import { Controls } from "@/components/Controls";
 import { shuffleArray, timeAsYear } from "@/utils";
 
-const fetcher = (url: string) =>
-  fetch(url)
-    .then((r) => r.json())
-    .then((data) => ({ ...data, events: shuffleArray(data.events) }));
+const eventFetcher = async (year: string) => {
+  let response;
+  try {
+    response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/events?year=${year}`
+    );
+  } catch (e) {
+    return Promise.reject("Failed to fetch");
+  }
+
+  const data = await response.json();
+  return { ...data, events: shuffleArray(data.events) };
+};
 
 const getRandomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max + 1 - min)) + min;
@@ -28,8 +37,8 @@ export default function Home() {
   const [prefetchedNext, setPrefetchedNext] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const { data, error, isLoading } = useSWRImmutable(
-    `${process.env.NEXT_PUBLIC_API_URL}/events?year=${timeAsYear(time)}`,
-    fetcher
+    timeAsYear(time),
+    eventFetcher
   );
 
   // Callbacks
@@ -43,7 +52,7 @@ export default function Home() {
 
   const showPreviousEvent = useCallback(() => {
     return setEventIndex((prevIndex) => {
-      if (data?.events?.length === 0) return 0;
+      if (!data?.events?.length) return 0;
       if (prevIndex === 0) return data.events.length - 1;
       return prevIndex - 1;
     });
@@ -60,11 +69,7 @@ export default function Home() {
       setTime(new Date());
       if (new Date().getSeconds() > prefetchTime && !prefetchedNext) {
         // Prefetch
-        const nextMinuteAsYear = timeAsYear(addMinutes(time, 1));
-        preload(
-          `${process.env.NEXT_PUBLIC_API_URL}/events?year=${nextMinuteAsYear}`,
-          fetcher
-        );
+        preload(timeAsYear(addMinutes(time, 1)), eventFetcher);
         setPrefetchedNext(true);
       }
     }, 500);
@@ -86,7 +91,24 @@ export default function Home() {
       <main className="flex justify-center h-screen items-center">
         <div className="px-8 max-w-xl w-full flex flex-col items-center gap-8 sm:gap-8">
           <Clock year={data?.year} yearMatch={data?.yearMatch} time={time} />
-          <EventDisplay event={data?.events[eventIndex]} year={data?.year} />
+          <div
+            className={`text-white sm:leading-7 sm:text-lg h-72
+                        overflow-y-auto bg-zinc-800 rounded-xl px-5 p-4 w-full 
+                        scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-lg`}
+          >
+            {isLoading && (
+              <div className="flex justify-center items-center min-h-full">
+                Loading...
+              </div>
+            )}
+            {error && (
+              <div className="flex justify-center items-center min-h-full">
+                Failed to load events
+              </div>
+            )}
+            {data && <EventDisplay event={data.events[eventIndex]} />}
+          </div>
+
           <Controls
             showNextEvent={showNextEvent}
             showPreviousEvent={showPreviousEvent}
