@@ -1,5 +1,6 @@
 import { lightFormat } from "date-fns";
 
+// Fisher-Yates
 export const shuffleArray = <T>(original: T[]): T[] => {
   const arr = original.slice();
   for (let i = arr.length - 1; i > 1; i--) {
