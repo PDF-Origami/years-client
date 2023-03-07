@@ -69,7 +69,7 @@ export const Progress = ({ paused, togglePause }: ProgressProps) => {
         className={`absolute text-white top-[8px] ${
           paused ? "left-[9px]" : "left-[8px]"
         }`}
-        title={paused ? "Play" : "Pause"}
+        title={paused ? "Unpause" : "Pause"}
       >
         {paused ? <HiPlay /> : <HiPause />}
       </button>

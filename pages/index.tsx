@@ -38,10 +38,7 @@ export default function Home() {
   const [paused, setPaused] = useState<boolean>(false);
   const [prefetchedNext, setPrefetchedNext] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
-  const { data, error, isLoading } = useSWRImmutable(
-    timeAsYear(time),
-    eventFetcher
-  );
+  const { data } = useSWRImmutable(timeAsYear(time), eventFetcher);
 
   // Callbacks
   const showNextEvent = useCallback(
@@ -73,10 +70,11 @@ export default function Home() {
       clearInterval(timer);
     } else {
       timer = setInterval(() => {
-        setTime(new Date());
-        if (new Date().getSeconds() > prefetchTime && !prefetchedNext) {
+        const newTime = new Date();
+        setTime(newTime);
+        if (newTime.getSeconds() > prefetchTime && !prefetchedNext) {
           // Prefetch
-          preload(timeAsYear(addMinutes(time, 1)), eventFetcher);
+          preload(timeAsYear(addMinutes(newTime, 1)), eventFetcher);
           setPrefetchedNext(true);
         }
       }, 500);
