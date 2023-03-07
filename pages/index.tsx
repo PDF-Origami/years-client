@@ -59,6 +59,16 @@ export default function Home() {
 
   const togglePause = useCallback(() => setPaused((old) => !old), []);
 
+  const clockStep = useCallback(() => {
+    const newTime = new Date();
+    setTime(newTime);
+    if (newTime.getSeconds() > prefetchTime && !prefetchedNext) {
+      // Prefetch
+      preload(timeAsYear(addMinutes(newTime, 1)), eventFetcher);
+      setPrefetchedNext(true);
+    }
+  }, [prefetchedNext]);
+
   // Effects
   useEffect(() => {
     setEventIndex(0);
@@ -69,18 +79,10 @@ export default function Home() {
     if (paused) {
       clearInterval(timer);
     } else {
-      timer = setInterval(() => {
-        const newTime = new Date();
-        setTime(newTime);
-        if (newTime.getSeconds() > prefetchTime && !prefetchedNext) {
-          // Prefetch
-          preload(timeAsYear(addMinutes(newTime, 1)), eventFetcher);
-          setPrefetchedNext(true);
-        }
-      }, 500);
+      timer = setInterval(clockStep, 500);
       return () => clearInterval(timer);
     }
-  }, [paused]);
+  }, [paused, clockStep]);
 
   return (
     <>

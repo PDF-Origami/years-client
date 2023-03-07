@@ -66,14 +66,14 @@ export const EventDisplay = ({ event }: EventDisplayProps) => {
         Math.ceil((event.links.positions.length - positions.length) / 2)
       ),
     };
-  }, [event]);
+  }, [event, date]);
   const textParts = useMemo(
     () =>
       getParts({
         links,
         text: description,
       }),
-    [event]
+    [description, links]
   );
 
   return (

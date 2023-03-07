@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { HiPause, HiPlay } from "react-icons/hi2";
 
 const drawProgress = (ctx: CanvasRenderingContext2D) => {
@@ -18,7 +18,7 @@ const drawProgress = (ctx: CanvasRenderingContext2D) => {
   ctx.stroke();
 };
 
-let req: number;
+let req = 0;
 
 type ProgressProps = {
   paused: boolean;
@@ -28,7 +28,15 @@ type ProgressProps = {
 export const Progress = ({ paused, togglePause }: ProgressProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
-  const [animationRequest, setAnimationRequest] = useState<number>(0); // Real ids are non-zero
+
+  const step = useCallback(
+    (timestamp: number) => {
+      if (!ctx) return;
+      drawProgress(ctx);
+      req = window.requestAnimationFrame(step);
+    },
+    [ctx]
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -42,18 +50,10 @@ export const Progress = ({ paused, togglePause }: ProgressProps) => {
     if (paused && req) {
       window.cancelAnimationFrame(req);
       req = 0;
-      // setAnimationRequest(0);
     } else if (ctx) {
-      const id = window.requestAnimationFrame(step);
-      // setAnimationRequest(id);
+      req = window.requestAnimationFrame(step);
     }
-  }, [paused, ctx]);
-
-  const step = (timestamp: number) => {
-    if (!ctx) return;
-    drawProgress(ctx);
-    req = window.requestAnimationFrame(step);
-  };
+  }, [paused, ctx, step]);
 
   return (
     <div className="absolute -right-11 w-8 h-8">
