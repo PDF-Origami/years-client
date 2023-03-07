@@ -110,17 +110,15 @@ export default function Home() {
                         overflow-y-auto bg-zinc-800 rounded-xl px-5 p-4 w-full 
                         scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-lg`}
           >
-            {/* {isLoading && (
-              <div className="flex justify-center items-center min-h-full">
-                Loading...
+            {data ? (
+              <EventDisplay event={data.events[eventIndex]} />
+            ) : (
+              <div className="flex flex-col gap-5 animate-pulse py-2">
+                <div className="bg-zinc-600 h-4 rounded-full" />
+                <div className="bg-zinc-600 h-4 rounded-full" />
+                <div className="bg-zinc-600 h-4 rounded-full" />
               </div>
             )}
-            {error && (
-              <div className="flex justify-center items-center min-h-full">
-                Failed to load events
-              </div>
-            )} */}
-            {data && <EventDisplay event={data.events[eventIndex]} />}
           </div>
 
           <Controls
