@@ -30,10 +30,12 @@ const getRandomInt = (min: number, max: number): number => {
 // When the clock shows this many seconds, prefetch next year's events.
 // Randomized to prevent accidental ddos
 const prefetchTime = getRandomInt(45, 55);
+let timer: NodeJS.Timer;
 
 export default function Home() {
   // State
   const [time, setTime] = useState<Date>(new Date());
+  const [paused, setPaused] = useState<boolean>(false);
   const [prefetchedNext, setPrefetchedNext] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const { data, error, isLoading } = useSWRImmutable(
@@ -58,6 +60,8 @@ export default function Home() {
     });
   }, [data]);
 
+  const togglePause = useCallback(() => setPaused((old) => !old), []);
+
   // Effects
   useEffect(() => {
     setEventIndex(0);
@@ -65,16 +69,20 @@ export default function Home() {
   }, [data]);
 
   useEffect(() => {
-    let timer = setInterval(() => {
-      setTime(new Date());
-      if (new Date().getSeconds() > prefetchTime && !prefetchedNext) {
-        // Prefetch
-        preload(timeAsYear(addMinutes(time, 1)), eventFetcher);
-        setPrefetchedNext(true);
-      }
-    }, 500);
-    return () => clearInterval(timer);
-  }, []);
+    if (paused) {
+      clearInterval(timer);
+    } else {
+      timer = setInterval(() => {
+        setTime(new Date());
+        if (new Date().getSeconds() > prefetchTime && !prefetchedNext) {
+          // Prefetch
+          preload(timeAsYear(addMinutes(time, 1)), eventFetcher);
+          setPrefetchedNext(true);
+        }
+      }, 500);
+      return () => clearInterval(timer);
+    }
+  }, [paused]);
 
   return (
     <>
@@ -90,13 +98,19 @@ export default function Home() {
       </Head>
       <main className="flex justify-center h-screen items-center">
         <div className="px-8 max-w-xl w-full flex flex-col items-center gap-8 sm:gap-8">
-          <Clock year={data?.year} yearMatch={data?.yearMatch} time={time} />
+          <Clock
+            year={data?.year}
+            yearMatch={data?.yearMatch}
+            time={time}
+            paused={paused}
+            togglePause={togglePause}
+          />
           <div
             className={`text-white sm:leading-7 sm:text-lg h-72
                         overflow-y-auto bg-zinc-800 rounded-xl px-5 p-4 w-full 
                         scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-lg`}
           >
-            {isLoading && (
+            {/* {isLoading && (
               <div className="flex justify-center items-center min-h-full">
                 Loading...
               </div>
@@ -105,7 +119,7 @@ export default function Home() {
               <div className="flex justify-center items-center min-h-full">
                 Failed to load events
               </div>
-            )}
+            )} */}
             {data && <EventDisplay event={data.events[eventIndex]} />}
           </div>
 
