@@ -56,17 +56,21 @@ const getParts = ({ text, links }: Event): EventTextPart[] => {
 
 export const EventDisplay = ({ event }: EventDisplayProps) => {
   const [date, description] = splitEventText(event.text);
+  const links = useMemo(() => {
+    const positions = date
+      ? event.links.positions.map((x) => x - date.length).filter((x) => x >= 0)
+      : event.links.positions;
+    return {
+      positions,
+      articles: event.links.articles.slice(
+        Math.ceil((event.links.positions.length - positions.length) / 2)
+      ),
+    };
+  }, [event]);
   const textParts = useMemo(
     () =>
       getParts({
-        links: {
-          ...event.links,
-          positions: date
-            ? event.links.positions
-                .map((x) => x - date.length)
-                .filter((x) => x >= 0)
-            : event.links.positions,
-        },
+        links,
         text: description,
       }),
     [event]
