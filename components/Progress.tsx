@@ -66,8 +66,8 @@ export const Progress = ({ paused, togglePause }: ProgressProps) => {
       />
       <button
         onClick={togglePause}
-        className={`absolute text-white top-[8px] ${
-          paused ? "left-[9px]" : "left-[8px]"
+        className={`absolute text-white py-[8px] pr-[8px] ${
+          paused ? "pl-[9px]" : "pl-[8px]"
         }`}
         title={paused ? "Unpause" : "Pause"}
       >
