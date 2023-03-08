@@ -108,7 +108,7 @@ export default function Home() {
           <Clock
             year={data?.year}
             yearMatch={data?.yearMatch}
-            time={time ?? new Date()}
+            time={time}
             paused={paused}
             togglePause={togglePause}
           />

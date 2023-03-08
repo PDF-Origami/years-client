@@ -6,7 +6,7 @@ import { Time } from "./Time";
 type ClockProps = {
   yearMatch?: string;
   year?: number;
-  time: Date;
+  time?: Date;
   paused: boolean;
   togglePause: () => void;
 };
@@ -33,7 +33,7 @@ export const Clock = ({
           CE
         </span>
       </p>
-      {yearMatch && yearMatch !== "full" && (
+      {time && yearMatch && yearMatch !== "full" && (
         <span className="text-zinc-300 text-xs">
           (No events found for {timeAsYear(time)})
         </span>
