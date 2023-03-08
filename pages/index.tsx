@@ -87,8 +87,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>
-          {`${window ? timeAsYear(time) : ""} - Years${
+        <title suppressHydrationWarning={true}>
+          {`${Number(timeAsYear(time))} - Years${
             process.env.NODE_ENV === "development" ? " (DEV)" : ""
           }`}
         </title>
