@@ -34,11 +34,14 @@ let timer: NodeJS.Timer;
 
 export default function Home() {
   // State
-  const [time, setTime] = useState<Date>(new Date());
+  const [time, setTime] = useState<Date>();
   const [paused, setPaused] = useState<boolean>(false);
   const [prefetchedNext, setPrefetchedNext] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
-  const { data } = useSWRImmutable(timeAsYear(time), eventFetcher);
+  const { data } = useSWRImmutable(
+    timeAsYear(time ?? new Date()),
+    eventFetcher
+  );
 
   // Callbacks
   const showNextEvent = useCallback(
@@ -71,6 +74,10 @@ export default function Home() {
 
   // Effects
   useEffect(() => {
+    setTime(new Date());
+  }, []);
+
+  useEffect(() => {
     setEventIndex(0);
     setPrefetchedNext(false);
   }, [data]);
@@ -96,15 +103,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main
-        className="flex justify-center h-screen items-center"
-        suppressHydrationWarning={true}
-      >
+      <main className="flex justify-center h-screen items-center">
         <div className="px-8 max-w-xl w-full flex flex-col items-center gap-8 sm:gap-8">
           <Clock
             year={data?.year}
             yearMatch={data?.yearMatch}
-            time={time}
+            time={time ?? new Date()}
             paused={paused}
             togglePause={togglePause}
           />
