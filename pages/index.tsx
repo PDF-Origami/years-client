@@ -3,6 +3,7 @@ import useSWRImmutable from "swr/immutable";
 import { preload } from "swr";
 import { addMinutes } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
+import { AiOutlineHourglass } from "react-icons/ai";
 
 import { EventDisplay } from "@/components/EventDisplay";
 import { Clock } from "@/components/Clock";
@@ -105,7 +106,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="p-4 h-screen flex flex-col">
+      <main className="p-4 sm:px-6 h-screen flex flex-col">
+        <div className="text-zinc-200 font-medium flex items-center">
+          Chronology
+          <AiOutlineHourglass size={22} />
+          Clock
+        </div>
         <div className="flex justify-center h-full items-center">
           <div className="px-4 max-w-xl w-full flex flex-col items-center gap-6 sm:gap-8">
             <Clock
