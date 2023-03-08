@@ -84,8 +84,6 @@ export const EventDisplay = ({ event }: EventDisplayProps) => {
           <a
             key={part.id}
             href={`https://en.wikipedia.org/wiki/${part.article}`}
-            target="_blank"
-            rel="noreferrer"
             className="text-blue-400"
           >
             {part.text}
