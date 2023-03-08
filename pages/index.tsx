@@ -96,7 +96,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex justify-center h-screen items-center">
+      <main
+        className="flex justify-center h-screen items-center"
+        suppressHydrationWarning={true}
+      >
         <div className="px-8 max-w-xl w-full flex flex-col items-center gap-8 sm:gap-8">
           <Clock
             year={data?.year}
