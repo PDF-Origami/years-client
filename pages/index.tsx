@@ -96,8 +96,11 @@ export default function Home() {
     <>
       <Head>
         <title>
-          {time && Number(timeAsYear(time))} - Chronology Clock
-          {process.env.NODE_ENV === "development" ? " (DEV)" : ""}
+          {`${
+            time ? Number(timeAsYear(time)) : "Loading..."
+          }  - Chronology Clock ${
+            process.env.NODE_ENV === "development" ? " (DEV)" : ""
+          }`}
         </title>
         <meta
           name="description"
