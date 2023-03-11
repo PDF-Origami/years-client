@@ -78,7 +78,7 @@ export const EventDisplay = ({ event }: EventDisplayProps) => {
 
   return (
     <>
-      <span className="text-zinc-400">{date}</span>
+      <span className="text-gray-400">{date}</span>
       {textParts.map((part) =>
         part.article ? (
           <a

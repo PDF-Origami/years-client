@@ -9,6 +9,8 @@ import { EventDisplay } from "@/components/EventDisplay";
 import { Clock } from "@/components/Clock";
 import { Controls } from "@/components/Controls";
 import { shuffleArray, timeAsYear } from "@/utils";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 
 const eventFetcher = async (year: string) => {
   let response;
@@ -110,11 +112,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="py-5 px-6 h-screen flex flex-col">
-        <div className="text-zinc-200 font-medium flex items-center">
-          Chronology
-          <AiOutlineHourglass size={22} />
-          Clock
-        </div>
+        <Header />
         <div className="flex justify-center h-full items-center">
           <div className="max-w-xl w-full flex flex-col items-center gap-6 sm:gap-8">
             <Clock
@@ -126,7 +124,7 @@ export default function Home() {
             />
             <div
               className={`text-white sm:leading-7 sm:text-lg h-72
-                        overflow-y-auto bg-zinc-800 rounded-xl px-5 p-4 w-full 
+                        overflow-y-auto bg-gray-800 rounded-xl px-5 p-4 w-full 
                         scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-lg`}
             >
               {data ? (
@@ -148,30 +146,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="flex">
-          <p className="text-zinc-500 text-xs">
-            Made by{" "}
-            <a href="https://twitter.com/PDFOrigami" className="text-blue-600">
-              @PDFOrigami
-            </a>
-            {" • "}
-            Source:{" "}
-            <a
-              href={`https://en.wikipedia.org/wiki/AD_${data?.year}`}
-              className="text-blue-600"
-            >
-              Wikipedia
-            </a>
-            {" • "}
-            <a
-              href="https://creativecommons.org/licenses/by-sa/3.0/"
-              className="text-blue-600"
-            >
-              Licence
-            </a>
-          </p>
-          <p className="text-zinc-500 text-xs"></p>
-        </div>
+        <Footer year={data?.year} />
       </main>
     </>
   );
