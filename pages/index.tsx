@@ -125,15 +125,15 @@ export default function Home() {
             <div
               className={`text-white sm:leading-7 sm:text-lg h-72
                         overflow-y-auto bg-gray-800 rounded-xl px-5 p-4 w-full 
-                        scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-lg`}
+                        scrollbar-thin scrollbar-thumb-gray-700 scrollbar-thumb-rounded-lg`}
             >
               {data ? (
                 <EventDisplay event={data.events[eventIndex]} />
               ) : (
                 <div className="flex flex-col gap-5 animate-pulse py-2">
-                  <div className="bg-zinc-600 h-4 rounded-full" />
-                  <div className="bg-zinc-600 h-4 rounded-full" />
-                  <div className="bg-zinc-600 h-4 rounded-full" />
+                  <div className="bg-gray-600 h-4 rounded-full" />
+                  <div className="bg-gray-600 h-4 rounded-full" />
+                  <div className="bg-gray-600 h-4 rounded-full" />
                 </div>
               )}
             </div>
