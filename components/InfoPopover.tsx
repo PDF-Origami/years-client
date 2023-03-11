@@ -9,7 +9,7 @@ export function InfoPopover() {
         <>
           <Popover.Button
             className={`text-zinc-200 flex items-center gap-1 sm:gap-[6px] text-sm sm:text-base 
-            rounded-full px-3 py-1`}
+            rounded-full`}
           >
             {<AiOutlineInfoCircle className="text-lg sm:text-xl" />}
 
@@ -21,10 +21,10 @@ export function InfoPopover() {
           bg-gray-800 shadow-lg rounded-xl text-white px-6 py-4
           `}
           >
-            I often look at the time and notice that it matches the year of a
-            well-known historical event, like 14:53 (fall of Constantinople). I
-            thought it&apos;d be fun to turn this concept into a web app, using
-            events from Wikipedia. Enjoy!
+            I often look at the clock and notice that the time matches the year
+            of a well-known historical event, like 14:53 (the fall of
+            Constantinople). I thought it&apos;d be fun to turn this concept
+            into a web app, using events from Wikipedia. Enjoy!
           </Popover.Panel>
         </>
       )}
